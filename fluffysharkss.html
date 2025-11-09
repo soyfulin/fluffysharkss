@@ -1,0 +1,1749 @@
+<html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦈 Picking Pedido Poppys - Fluffy Sharks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .progress-container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 50px;
+            background: #ecf0f1;
+            border-radius: 25px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #27ae60 0%, #16a085 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+            color: #2c3e50;
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .stat-value.highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .modelo-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            border-left: 5px solid #667eea;
+        }
+        
+        .modelo-card.completed {
+            background: linear-gradient(135deg, #d5f4e6 0%, #c8e6c9 100%);
+            border-left-color: #27ae60;
+            opacity: 0.7;
+        }
+        
+        .modelo-header {
+            display: grid;
+            grid-template-columns: 150px 1fr auto;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #ecf0f1;
+            align-items: center;
+        }
+        
+        .modelo-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .modelo-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: white;
+        }
+        
+        .modelo-image.placeholder {
+            font-size: 4em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .modelo-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .modelo-name {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .modelo-total {
+            font-size: 1.2em;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #f8f9fa;
+            padding: 15px 25px;
+            border-radius: 10px;
+        }
+        
+        .checkbox-container input[type="checkbox"] {
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            accent-color: #27ae60;
+        }
+        
+        .checkbox-label {
+            font-weight: 700;
+            font-size: 1.2em;
+            color: #27ae60;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .tallas-grid {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .talla-row {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.2s ease;
+        }
+        
+        .talla-row:hover {
+            background: #e8eaf6;
+            transform: translateX(5px);
+        }
+        
+        .talla-size {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .talla-size::before {
+            content: '👟';
+            font-size: 1.2em;
+        }
+        
+        .talla-location {
+            color: #7f8c8d;
+            font-size: 1em;
+            line-height: 1.5;
+        }
+        
+        .talla-cantidad {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1em;
+            white-space: nowrap;
+        }
+        
+        .location-tag {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin: 2px;
+            font-weight: 600;
+        }
+        
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group label {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #ecf0f1;
+            border-radius: 25px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .filter-btn:hover:not(.active) {
+            background: #f8f9fa;
+            border-color: #667eea;
+        }
+        
+        @media (max-width: 968px) {
+            .modelo-header {
+                grid-template-columns: 120px 1fr;
+                gap: 15px;
+            }
+            
+            .modelo-image {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .checkbox-container {
+                grid-column: 1 / -1;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .modelo-name {
+                font-size: 1.5em;
+            }
+            
+            .talla-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .modelo-header {
+                grid-template-columns: 1fr;
+            }
+            
+            .modelo-image {
+                width: 100%;
+                height: 200px;
+            }
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .progress-container,
+            .filters,
+            .checkbox-container {
+                display: none;
+            }
+            
+            .modelo-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🦈 PICKING PEDIDO POPPYS</h1>
+            <p class="subtitle">Control de Preparación por Modelo con Fotos | Fluffy Sharks</p>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%;">0%</div>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Total Unidades</div>
+                    <div class="stat-value highlight">500</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Total Modelos</div>
+                    <div class="stat-value">20</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Completados</div>
+                    <div class="stat-value" id="modelosCompletados">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Pendientes</div>
+                    <div class="stat-value" id="modelosPendientes">20</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="filters">
+            <div class="filter-group">
+                <label>Mostrar:</label>
+                <button class="filter-btn active" onclick="filterModelos('todos')">Todos</button>
+                <button class="filter-btn" onclick="filterModelos('pendientes')">Pendientes</button>
+                <button class="filter-btn" onclick="filterModelos('completados')">Completados</button>
+            </div>
+        </div>
+        
+        <div id="content">
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_baby_black_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Baby Black</div>
+                                <div class="modelo-total">51 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Baby-Black" onchange="toggleModelo('Baby Black')">
+                                <label for="check-Baby-Black" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">13cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S9 (F3 P2): 3 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">14cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S9 (F3 P2): 2 unid.</span></div>
+                                        <div class="talla-cantidad">2 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">15cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S9 (F3 P2): 5 unid.</span> <span class="location-tag">📦 S1 (F1 P1): 1 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">16cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S9 (F3 P2): 7 unid.</span></div>
+                                        <div class="talla-cantidad">7 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">17cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S9 (F3 P2): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">18cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S9 (F3 P2): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">19cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S9 (F3 P2): 7 unid.</span></div>
+                                        <div class="talla-cantidad">7 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">20cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S2 (F1 P2): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">21cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S2 (F1 P2): 4 unid.</span></div>
+                                        <div class="talla-cantidad">4 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">22cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S2 (F1 P2): 4 unid.</span></div>
+                                        <div class="talla-cantidad">4 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_baby_blue_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Baby Blue</div>
+                                <div class="modelo-total">68 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Baby-Blue" onchange="toggleModelo('Baby Blue')">
+                                <label for="check-Baby-Blue" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">13cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S8 (F1 P2): 3 unid.</span> <span class="location-tag">📦 165 (F2 P3): 1 unid.</span></div>
+                                        <div class="talla-cantidad">4 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">14cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S1 (F1 P1): 3 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">15cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S8 (F1 P2): 5 unid.</span> <span class="location-tag">📦 S1 (F1 P1): 1 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">16cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S8 (F1 P2): 7 unid.</span></div>
+                                        <div class="talla-cantidad">7 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">17cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S8 (F1 P2): 7 unid.</span> <span class="location-tag">📦 149 (F1 P1): 1 unid.</span></div>
+                                        <div class="talla-cantidad">8 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">18cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S8 (F1 P2): 8 unid.</span></div>
+                                        <div class="talla-cantidad">8 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">19cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S8 (F1 P2): 5 unid.</span> <span class="location-tag">📦 S11 (F1 P3): 1 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">20cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S8 (F1 P2): 8 unid.</span></div>
+                                        <div class="talla-cantidad">8 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">21cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S9 (F3 P2): 8 unid.</span></div>
+                                        <div class="talla-cantidad">8 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">22cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S11 (F1 P3): 8 unid.</span> <span class="location-tag">📦 S8 (F1 P2): 2 unid.</span></div>
+                                        <div class="talla-cantidad">10 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_baby_pink_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Baby Pink</div>
+                                <div class="modelo-total">45 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Baby-Pink" onchange="toggleModelo('Baby Pink')">
+                                <label for="check-Baby-Pink" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">13cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S1 (F1 P1): 5 unid.</span> <span class="location-tag">📦 S10 (F5 P3): 1 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">14cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S10 (F5 P3): 4 unid.</span></div>
+                                        <div class="talla-cantidad">4 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">15cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S1 (F1 P1): 5 unid.</span> <span class="location-tag">📦 S10 (F5 P3): 1 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">16cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S10 (F5 P3): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">17cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S10 (F5 P3): 5 unid.</span></div>
+                                        <div class="talla-cantidad">5 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">18cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S10 (F5 P3): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">19cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 108 (F2 P2): 1 unid.</span> <span class="location-tag">📦 S10 (F5 P3): 5 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">20cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S10 (F5 P3): 3 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">21cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S13 (F1 P3): 3 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_baby_purple_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Baby Purple</div>
+                                <div class="modelo-total">6 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Baby-Purple" onchange="toggleModelo('Baby Purple')">
+                                <label for="check-Baby-Purple" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">20cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 146 (F2 P1): 3 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">21cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 116 (F1 P1): 3 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_baby_royal_blue_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Baby Royal Blue</div>
+                                <div class="modelo-total">48 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Baby-Royal-Blue" onchange="toggleModelo('Baby Royal Blue')">
+                                <label for="check-Baby-Royal-Blue" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">13cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S1 (F1 P1): 5 unid.</span> <span class="location-tag">📦 S12 (F5 P3): 1 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">14cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S12 (F5 P3): 5 unid.</span> <span class="location-tag">📦 1-14-15 (F2 P2): 1 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">15cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S12 (F5 P3): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">16cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S12 (F5 P3): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">17cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S12 (F5 P3): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">18cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S12 (F5 P3): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">19cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S12 (F5 P3): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">22cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S12 (F5 P3): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_baby_snowy_blue_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Snowy Blue</div>
+                                <div class="modelo-total">34 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Snowy-Blue" onchange="toggleModelo('Snowy Blue')">
+                                <label for="check-Snowy-Blue" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">13cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S13 (F1 P3): 5 unid.</span></div>
+                                        <div class="talla-cantidad">5 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">14cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S13 (F1 P3): 5 unid.</span></div>
+                                        <div class="talla-cantidad">5 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">15cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S13 (F1 P3): 3 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">16cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S13 (F1 P3): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">17cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S13 (F1 P3): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">18cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S13 (F1 P3): 5 unid.</span></div>
+                                        <div class="talla-cantidad">5 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">19cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S13 (F1 P3): 4 unid.</span></div>
+                                        <div class="talla-cantidad">4 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_deep_black_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Deep Black FluffyKids</div>
+                                <div class="modelo-total">8 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Deep-Black-FluffyKids" onchange="toggleModelo('Deep Black FluffyKids')">
+                                <label for="check-Deep-Black-FluffyKids" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">21cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 F1 (F5 P1): 4 unid.</span></div>
+                                        <div class="talla-cantidad">4 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">22cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 F5 (F5 P2): 4 unid.</span></div>
+                                        <div class="talla-cantidad">4 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v2_fresh_watermelon_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Fresh Watermelon FluffyKids</div>
+                                <div class="modelo-total">31 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Fresh-Watermelon-FluffyKids" onchange="toggleModelo('Fresh Watermelon FluffyKids')">
+                                <label for="check-Fresh-Watermelon-FluffyKids" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">15cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 143 (F2 P1): 3 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">16cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 143 (F2 P1): 3 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">17cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 143 (F2 P1): 1 unid.</span></div>
+                                        <div class="talla-cantidad">1 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">18cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 143 (F2 P1): 4 unid.</span></div>
+                                        <div class="talla-cantidad">4 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">19cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S14 (F3 P2): 4 unid.</span></div>
+                                        <div class="talla-cantidad">4 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">20cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 143 (F2 P1): 1 unid.</span> <span class="location-tag">📦 S14 (F3 P2): 5 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">21cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S14 (F3 P2): 4 unid.</span></div>
+                                        <div class="talla-cantidad">4 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">22cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S14 (F3 P2): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v3_light_blue_white_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Light Blue White FluffyKids</div>
+                                <div class="modelo-total">23 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Light-Blue-White-FluffyKids" onchange="toggleModelo('Light Blue White FluffyKids')">
+                                <label for="check-Light-Blue-White-FluffyKids" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">15cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 123 (F2 P1): 5 unid.</span></div>
+                                        <div class="talla-cantidad">5 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">16cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 123 (F2 P1): 5 unid.</span></div>
+                                        <div class="talla-cantidad">5 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">17cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 149 (F1 P1): 2 unid.</span></div>
+                                        <div class="talla-cantidad">2 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">18cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 123 (F2 P1): 2 unid.</span> <span class="location-tag">📦 21 (F3 P2): 1 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">19cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 123 (F2 P1): 2 unid.</span></div>
+                                        <div class="talla-cantidad">2 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">20cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 123 (F2 P1): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_pinky_suitness_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Pinky Suitness FluffyKids</div>
+                                <div class="modelo-total">18 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Pinky-Suitness-FluffyKids" onchange="toggleModelo('Pinky Suitness FluffyKids')">
+                                <label for="check-Pinky-Suitness-FluffyKids" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">19cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 108 (F2 P2): 2 unid.</span> <span class="location-tag">📦 109 (F4 P2): 1 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">20cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 130 (F4 P1): 8 unid.</span></div>
+                                        <div class="talla-cantidad">8 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">21cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 1-14-15 (F2 P2): 3 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">22cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 F4 (F1 P3): 4 unid.</span></div>
+                                        <div class="talla-cantidad">4 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_royal_blue_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Royal Blue FluffyKids</div>
+                                <div class="modelo-total">46 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Royal-Blue-FluffyKids" onchange="toggleModelo('Royal Blue FluffyKids')">
+                                <label for="check-Royal-Blue-FluffyKids" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">19cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 F1 (F5 P1): 7 unid.</span> <span class="location-tag">📦 F5 (F5 P2): 5 unid.</span></div>
+                                        <div class="talla-cantidad">12 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">20cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 F5 (F5 P2): 10 unid.</span></div>
+                                        <div class="talla-cantidad">10 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">21cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 F2 (F5 P2): 12 unid.</span></div>
+                                        <div class="talla-cantidad">12 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">22cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 F5 (F5 P2): 12 unid.</span></div>
+                                        <div class="talla-cantidad">12 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_skull_gray_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Skull Gray FluffyKids</div>
+                                <div class="modelo-total">27 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Skull-Gray-FluffyKids" onchange="toggleModelo('Skull Gray FluffyKids')">
+                                <label for="check-Skull-Gray-FluffyKids" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">19cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 F7 (F5 P1): 5 unid.</span></div>
+                                        <div class="talla-cantidad">5 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">21cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 F8 (F5 P1): 10 unid.</span></div>
+                                        <div class="talla-cantidad">10 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">22cm</div>
+                                        <div class="talla-location"><span class="location-tag">📦 F3 (F5 P2): 11 unid.</span> <span class="location-tag">📦 F8 (F5 P1): 1 unid.</span></div>
+                                        <div class="talla-cantidad">12 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/wonders_edition_v1_blue_lightning_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Blue Lightning</div>
+                                <div class="modelo-total">7 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Blue-Lightning" onchange="toggleModelo('Blue Lightning')">
+                                <label for="check-Blue-Lightning" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">36/37</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S17 (F5 P3): 7 unid.</span></div>
+                                        <div class="talla-cantidad">7 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/gradient_edition_v1_blue_navy_blue_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Blue Navy Blue</div>
+                                <div class="modelo-total">12 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Blue-Navy-Blue" onchange="toggleModelo('Blue Navy Blue')">
+                                <label for="check-Blue-Navy-Blue" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">36/37</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S4 (F1 P1): 4 unid.</span> <span class="location-tag">📦 S19 (F5 P2): 2 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">38/39</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S19 (F5 P2): 6 unid.</span></div>
+                                        <div class="talla-cantidad">6 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_cardinal_red_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Cardinal Red</div>
+                                <div class="modelo-total">5 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Cardinal-Red" onchange="toggleModelo('Cardinal Red')">
+                                <label for="check-Cardinal-Red" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">38/39</div>
+                                        <div class="talla-location"><span class="location-tag">📦 F12 (F1 P1): 5 unid.</span></div>
+                                        <div class="talla-cantidad">5 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/wonders_edition_v1_cloudy_black_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Cloudy Black</div>
+                                <div class="modelo-total">15 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Cloudy-Black" onchange="toggleModelo('Cloudy Black')">
+                                <label for="check-Cloudy-Black" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">36/37</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S4 (F1 P1): 5 unid.</span></div>
+                                        <div class="talla-cantidad">5 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">38/39</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S5 (F1 P2): 5 unid.</span></div>
+                                        <div class="talla-cantidad">5 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">40/41</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S17 (F5 P1): 5 unid.</span></div>
+                                        <div class="talla-cantidad">5 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/wonders_edition_v1_cloudy_blue_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Cloudy Blue</div>
+                                <div class="modelo-total">5 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Cloudy-Blue" onchange="toggleModelo('Cloudy Blue')">
+                                <label for="check-Cloudy-Blue" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">36/37</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S-19 (F5 P2): 5 unid.</span></div>
+                                        <div class="talla-cantidad">5 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/og_edition_v3_deep_black_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Deep Black</div>
+                                <div class="modelo-total">13 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Deep-Black" onchange="toggleModelo('Deep Black')">
+                                <label for="check-Deep-Black" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">36/37</div>
+                                        <div class="talla-location"><span class="location-tag">📦 F9 (F3 P2): 5 unid.</span></div>
+                                        <div class="talla-cantidad">5 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">38/39</div>
+                                        <div class="talla-location"><span class="location-tag">📦 F9 (F3 P2): 5 unid.</span></div>
+                                        <div class="talla-cantidad">5 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">42/43</div>
+                                        <div class="talla-location"><span class="location-tag">📦 F11 (F1 P3): 3 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/wonders_edition_v1_galaxy_black_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Galaxy Black</div>
+                                <div class="modelo-total">35 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Galaxy-Black" onchange="toggleModelo('Galaxy Black')">
+                                <label for="check-Galaxy-Black" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">36/37</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S7 (F1 P1): 12 unid.</span></div>
+                                        <div class="talla-cantidad">12 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">38/39</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S5 (F1 P2): 7 unid.</span> <span class="location-tag">📦 S15 (F1 P3): 5 unid.</span></div>
+                                        <div class="talla-cantidad">12 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">40/41</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S15 (F1 P3): 3 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">42/43</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S15 (F1 P3): 4 unid.</span></div>
+                                        <div class="talla-cantidad">4 unid.</div>
+                                    </div>
+                                
+                                    <div class="talla-row">
+                                        <div class="talla-size">44/45</div>
+                                        <div class="talla-location"><span class="location-tag">📦 S15 (F1 P3): 4 unid.</span></div>
+                                        <div class="talla-cantidad">4 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                
+                    <div class="modelo-card">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                <img src="https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/og_edition_v1_skull_gray_1.png">
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 Skull Gray</div>
+                                <div class="modelo-total">3 unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="check-Skull-Gray" onchange="toggleModelo('Skull Gray')">
+                                <label for="check-Skull-Gray" class="checkbox-label">
+                                    MARCAR
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            
+                                    <div class="talla-row">
+                                        <div class="talla-size">38/39</div>
+                                        <div class="talla-location"><span class="location-tag">📦 146 (F2 P1): 3 unid.</span></div>
+                                        <div class="talla-cantidad">3 unid.</div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                </div>
+    </div>
+    
+    <script>
+        const pedidoData = [
+            {
+                modelo: "Baby Black",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_baby_black_1.png",
+                total: 51,
+                items: [
+                    { talla: "13cm", cantidad: 3, caja: "S9", fila: 3, piso: 2 },
+                    { talla: "14cm", cantidad: 2, caja: "S9", fila: 3, piso: 2 },
+                    { talla: "15cm", cantidad: 5, caja: "S9", fila: 3, piso: 2 },
+                    { talla: "15cm", cantidad: 1, caja: "S1", fila: 1, piso: 1 },
+                    { talla: "16cm", cantidad: 7, caja: "S9", fila: 3, piso: 2 },
+                    { talla: "17cm", cantidad: 6, caja: "S9", fila: 3, piso: 2 },
+                    { talla: "18cm", cantidad: 6, caja: "S9", fila: 3, piso: 2 },
+                    { talla: "19cm", cantidad: 7, caja: "S9", fila: 3, piso: 2 },
+                    { talla: "20cm", cantidad: 6, caja: "S2", fila: 1, piso: 2 },
+                    { talla: "21cm", cantidad: 4, caja: "S2", fila: 1, piso: 2 },
+                    { talla: "22cm", cantidad: 4, caja: "S2", fila: 1, piso: 2 }
+                ]
+            },
+            {
+                modelo: "Baby Blue",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_baby_blue_1.png",
+                total: 68,
+                items: [
+                    { talla: "13cm", cantidad: 3, caja: "S8", fila: 1, piso: 2 },
+                    { talla: "13cm", cantidad: 1, caja: "165", fila: 2, piso: 3 },
+                    { talla: "14cm", cantidad: 3, caja: "S1", fila: 1, piso: 1 },
+                    { talla: "15cm", cantidad: 5, caja: "S8", fila: 1, piso: 2 },
+                    { talla: "15cm", cantidad: 1, caja: "S1", fila: 1, piso: 1 },
+                    { talla: "16cm", cantidad: 7, caja: "S8", fila: 1, piso: 2 },
+                    { talla: "17cm", cantidad: 7, caja: "S8", fila: 1, piso: 2 },
+                    { talla: "17cm", cantidad: 1, caja: "149", fila: 1, piso: 1 },
+                    { talla: "18cm", cantidad: 8, caja: "S8", fila: 1, piso: 2 },
+                    { talla: "19cm", cantidad: 5, caja: "S8", fila: 1, piso: 2 },
+                    { talla: "19cm", cantidad: 1, caja: "S11", fila: 1, piso: 3 },
+                    { talla: "20cm", cantidad: 8, caja: "S8", fila: 1, piso: 2 },
+                    { talla: "21cm", cantidad: 8, caja: "S9", fila: 3, piso: 2 },
+                    { talla: "22cm", cantidad: 8, caja: "S11", fila: 1, piso: 3 },
+                    { talla: "22cm", cantidad: 2, caja: "S8", fila: 1, piso: 2 }
+                ]
+            },
+            {
+                modelo: "Baby Pink",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_baby_pink_1.png",
+                total: 45,
+                items: [
+                    { talla: "13cm", cantidad: 5, caja: "S1", fila: 1, piso: 1 },
+                    { talla: "13cm", cantidad: 1, caja: "S10", fila: 5, piso: 3 },
+                    { talla: "14cm", cantidad: 4, caja: "S10", fila: 5, piso: 3 },
+                    { talla: "15cm", cantidad: 5, caja: "S1", fila: 1, piso: 1 },
+                    { talla: "15cm", cantidad: 1, caja: "S10", fila: 5, piso: 3 },
+                    { talla: "16cm", cantidad: 6, caja: "S10", fila: 5, piso: 3 },
+                    { talla: "17cm", cantidad: 5, caja: "S10", fila: 5, piso: 3 },
+                    { talla: "18cm", cantidad: 6, caja: "S10", fila: 5, piso: 3 },
+                    { talla: "19cm", cantidad: 1, caja: "108", fila: 2, piso: 2 },
+                    { talla: "19cm", cantidad: 5, caja: "S10", fila: 5, piso: 3 },
+                    { talla: "20cm", cantidad: 3, caja: "S10", fila: 5, piso: 3 },
+                    { talla: "21cm", cantidad: 3, caja: "S13", fila: 1, piso: 3 }
+                ]
+            },
+            {
+                modelo: "Baby Purple",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_baby_purple_1.png",
+                total: 6,
+                items: [
+                    { talla: "20cm", cantidad: 3, caja: "146", fila: 2, piso: 1 },
+                    { talla: "21cm", cantidad: 3, caja: "116", fila: 1, piso: 1 }
+                ]
+            },
+            {
+                modelo: "Baby Royal Blue",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_baby_royal_blue_1.png",
+                total: 48,
+                items: [
+                    { talla: "13cm", cantidad: 5, caja: "S1", fila: 1, piso: 1 },
+                    { talla: "13cm", cantidad: 1, caja: "S12", fila: 5, piso: 3 },
+                    { talla: "14cm", cantidad: 5, caja: "S12", fila: 5, piso: 3 },
+                    { talla: "14cm", cantidad: 1, caja: "1-14-15", fila: 2, piso: 2 },
+                    { talla: "15cm", cantidad: 6, caja: "S12", fila: 5, piso: 3 },
+                    { talla: "16cm", cantidad: 6, caja: "S12", fila: 5, piso: 3 },
+                    { talla: "17cm", cantidad: 6, caja: "S12", fila: 5, piso: 3 },
+                    { talla: "18cm", cantidad: 6, caja: "S12", fila: 5, piso: 3 },
+                    { talla: "19cm", cantidad: 6, caja: "S12", fila: 5, piso: 3 },
+                    { talla: "22cm", cantidad: 6, caja: "S12", fila: 5, piso: 3 }
+                ]
+            },
+            {
+                modelo: "Snowy Blue",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_snowy_blue_1.png",
+                total: 34,
+                items: [
+                    { talla: "13cm", cantidad: 5, caja: "S13", fila: 1, piso: 3 },
+                    { talla: "14cm", cantidad: 5, caja: "S13", fila: 1, piso: 3 },
+                    { talla: "15cm", cantidad: 3, caja: "S13", fila: 1, piso: 3 },
+                    { talla: "16cm", cantidad: 6, caja: "S13", fila: 1, piso: 3 },
+                    { talla: "17cm", cantidad: 6, caja: "S13", fila: 1, piso: 3 },
+                    { talla: "18cm", cantidad: 5, caja: "S13", fila: 1, piso: 3 },
+                    { talla: "19cm", cantidad: 4, caja: "S13", fila: 1, piso: 3 }
+                ]
+            },
+            {
+                modelo: "Deep Black FluffyKids",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_deep_black_1.png",
+                total: 8,
+                items: [
+                    { talla: "21cm", cantidad: 4, caja: "F1", fila: 5, piso: 1 },
+                    { talla: "22cm", cantidad: 4, caja: "F5", fila: 5, piso: 2 }
+                ]
+            },
+            {
+                modelo: "Fresh Watermelon FluffyKids",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_fresh_watermelon_1.png",
+                total: 31,
+                items: [
+                    { talla: "15cm", cantidad: 3, caja: "143", fila: 2, piso: 1 },
+                    { talla: "16cm", cantidad: 3, caja: "143", fila: 2, piso: 1 },
+                    { talla: "17cm", cantidad: 1, caja: "143", fila: 2, piso: 1 },
+                    { talla: "18cm", cantidad: 4, caja: "143", fila: 2, piso: 1 },
+                    { talla: "19cm", cantidad: 4, caja: "S14", fila: 3, piso: 2 },
+                    { talla: "20cm", cantidad: 1, caja: "143", fila: 2, piso: 1 },
+                    { talla: "20cm", cantidad: 5, caja: "S14", fila: 3, piso: 2 },
+                    { talla: "21cm", cantidad: 4, caja: "S14", fila: 3, piso: 2 },
+                    { talla: "22cm", cantidad: 6, caja: "S14", fila: 3, piso: 2 }
+                ]
+            },
+            {
+                modelo: "Light Blue White FluffyKids",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_light_blue_white_1.png",
+                total: 23,
+                items: [
+                    { talla: "15cm", cantidad: 5, caja: "123", fila: 2, piso: 1 },
+                    { talla: "16cm", cantidad: 5, caja: "123", fila: 2, piso: 1 },
+                    { talla: "17cm", cantidad: 2, caja: "149", fila: 1, piso: 1 },
+                    { talla: "18cm", cantidad: 2, caja: "123", fila: 2, piso: 1 },
+                    { talla: "18cm", cantidad: 1, caja: "21", fila: 3, piso: 2 },
+                    { talla: "19cm", cantidad: 2, caja: "123", fila: 2, piso: 1 },
+                    { talla: "20cm", cantidad: 6, caja: "123", fila: 2, piso: 1 }
+                ]
+            },
+            {
+                modelo: "Pinky Suitness FluffyKids",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_pinky_suitness_1.png",
+                total: 18,
+                items: [
+                    { talla: "19cm", cantidad: 2, caja: "108", fila: 2, piso: 2 },
+                    { talla: "19cm", cantidad: 1, caja: "109", fila: 4, piso: 2 },
+                    { talla: "20cm", cantidad: 8, caja: "130", fila: 4, piso: 1 },
+                    { talla: "21cm", cantidad: 3, caja: "1-14-15", fila: 2, piso: 2 },
+                    { talla: "22cm", cantidad: 4, caja: "F4", fila: 1, piso: 3 }
+                ]
+            },
+            {
+                modelo: "Royal Blue FluffyKids",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_royal_blue_1.png",
+                total: 46,
+                items: [
+                    { talla: "19cm", cantidad: 7, caja: "F1", fila: 5, piso: 1 },
+                    { talla: "19cm", cantidad: 5, caja: "F5", fila: 5, piso: 2 },
+                    { talla: "20cm", cantidad: 10, caja: "F5", fila: 5, piso: 2 },
+                    { talla: "21cm", cantidad: 12, caja: "F2", fila: 5, piso: 2 },
+                    { talla: "22cm", cantidad: 12, caja: "F5", fila: 5, piso: 2 }
+                ]
+            },
+            {
+                modelo: "Skull Gray FluffyKids",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_skull_gray_1.png",
+                total: 27,
+                items: [
+                    { talla: "19cm", cantidad: 5, caja: "F7", fila: 5, piso: 1 },
+                    { talla: "21cm", cantidad: 10, caja: "F8", fila: 5, piso: 1 },
+                    { talla: "22cm", cantidad: 11, caja: "F3", fila: 5, piso: 2 },
+                    { talla: "22cm", cantidad: 1, caja: "F8", fila: 5, piso: 1 }
+                ]
+            },
+            {
+                modelo: "Blue Lightning",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_blue_lightning_1.png",
+                total: 7,
+                items: [
+                    { talla: "36/37", cantidad: 7, caja: "S17", fila: 5, piso: 3 }
+                ]
+            },
+            {
+                modelo: "Blue Navy Blue",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_blue_navy_blue_1.png",
+                total: 12,
+                items: [
+                    { talla: "36/37", cantidad: 4, caja: "S4", fila: 1, piso: 1 },
+                    { talla: "36/37", cantidad: 2, caja: "S19", fila: 5, piso: 2 },
+                    { talla: "38/39", cantidad: 6, caja: "S19", fila: 5, piso: 2 }
+                ]
+            },
+            {
+                modelo: "Cardinal Red",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_cardinal_red_1.png",
+                total: 5,
+                items: [
+                    { talla: "38/39", cantidad: 5, caja: "F12", fila: 1, piso: 1 }
+                ]
+            },
+            {
+                modelo: "Cloudy Black",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_cloudy_black_1.png",
+                total: 15,
+                items: [
+                    { talla: "36/37", cantidad: 5, caja: "S4", fila: 1, piso: 1 },
+                    { talla: "38/39", cantidad: 5, caja: "S5", fila: 1, piso: 2 },
+                    { talla: "40/41", cantidad: 5, caja: "S17", fila: 5, piso: 1 }
+                ]
+            },
+            {
+                modelo: "Cloudy Blue",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_cloudy_blue_1.png",
+                total: 5,
+                items: [
+                    { talla: "36/37", cantidad: 5, caja: "S-19", fila: 5, piso: 2 }
+                ]
+            },
+            {
+                modelo: "Deep Black",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_deep_black_1.png",
+                total: 13,
+                items: [
+                    { talla: "36/37", cantidad: 5, caja: "F9", fila: 3, piso: 2 },
+                    { talla: "38/39", cantidad: 5, caja: "F9", fila: 3, piso: 2 },
+                    { talla: "42/43", cantidad: 3, caja: "F11", fila: 1, piso: 3 }
+                ]
+            },
+            {
+                modelo: "Galaxy Black",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_galaxy_black_1.png",
+                total: 35,
+                items: [
+                    { talla: "36/37", cantidad: 12, caja: "S7", fila: 1, piso: 1 },
+                    { talla: "38/39", cantidad: 7, caja: "S5", fila: 1, piso: 2 },
+                    { talla: "38/39", cantidad: 5, caja: "S15", fila: 1, piso: 3 },
+                    { talla: "40/41", cantidad: 3, caja: "S15", fila: 1, piso: 3 },
+                    { talla: "42/43", cantidad: 4, caja: "S15", fila: 1, piso: 3 },
+                    { talla: "44/45", cantidad: 4, caja: "S15", fila: 1, piso: 3 }
+                ]
+            },
+            {
+                modelo: "Skull Gray",
+                imagen: "https://raw.githubusercontent.com/soyfulin/fluffysharkss/main/images/fluffykids_edition_v1_skull_gray_1.png",
+                total: 3,
+                items: [
+                    { talla: "38/39", cantidad: 3, caja: "146", fila: 2, piso: 1 }
+                ]
+            }
+        ];
+        
+        let completedModelos = new Set();
+        let currentFilter = 'todos';
+        
+        // Cargar estado guardado
+        function loadState() {
+            const saved = localStorage.getItem('pickingPoppysModelos');
+            if (saved) {
+                completedModelos = new Set(JSON.parse(saved));
+            }
+        }
+        
+        // Guardar estado
+        function saveState() {
+            localStorage.setItem('pickingPoppysModelos', JSON.stringify([...completedModelos]));
+        }
+        
+        function toggleModelo(modeloName) {
+            if (completedModelos.has(modeloName)) {
+                completedModelos.delete(modeloName);
+            } else {
+                completedModelos.add(modeloName);
+            }
+            saveState();
+            updateProgress();
+            renderContent();
+        }
+        
+        function updateProgress() {
+            const total = pedidoData.length;
+            const completed = completedModelos.size;
+            const percentage = Math.round((completed / total) * 100);
+            
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = percentage + '%';
+            document.getElementById('modelosCompletados').textContent = completed;
+            document.getElementById('modelosPendientes').textContent = total - completed;
+        }
+        
+        function filterModelos(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            renderContent();
+        }
+        
+        function renderContent() {
+            const content = document.getElementById('content');
+            
+            let modelos = pedidoData;
+            
+            // Aplicar filtro
+            if (currentFilter === 'pendientes') {
+                modelos = modelos.filter(m => !completedModelos.has(m.modelo));
+            } else if (currentFilter === 'completados') {
+                modelos = modelos.filter(m => completedModelos.has(m.modelo));
+            }
+            
+            if (modelos.length === 0) {
+                content.innerHTML = '<div style="background: linear-gradient(135deg, #27ae60 0%, #16a085 100%); color: white; padding: 30px; border-radius: 12px; text-align: center; font-size: 1.5em;"><h3>🎉 ¡No hay modelos en esta categoría!</h3></div>';
+                return;
+            }
+            
+            let html = '';
+            
+            modelos.forEach(modelo => {
+                const isCompleted = completedModelos.has(modelo.modelo);
+                
+                // Agrupar por talla
+                const tallaMap = new Map();
+                modelo.items.forEach(item => {
+                    if (!tallaMap.has(item.talla)) {
+                        tallaMap.set(item.talla, []);
+                    }
+                    tallaMap.get(item.talla).push(item);
+                });
+                
+                // Generar HTML de la imagen
+                let imagenHTML = `<img src="${modelo.imagen}">`;
+                
+                html += `
+                    <div class="modelo-card ${isCompleted ? 'completed' : ''}">
+                        <div class="modelo-header">
+                            <div class="modelo-image">
+                                ${imagenHTML}
+                            </div>
+                            <div class="modelo-info">
+                                <div class="modelo-name">🦈 ${modelo.modelo}</div>
+                                <div class="modelo-total">${modelo.total} unidades totales</div>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" 
+                                       id="check-${modelo.modelo.replace(/\s+/g, '-')}" 
+                                       ${isCompleted ? 'checked' : ''}
+                                       onchange="toggleModelo('${modelo.modelo}')">
+                                <label for="check-${modelo.modelo.replace(/\s+/g, '-')}" class="checkbox-label">
+                                    ${isCompleted ? '✅ LISTO' : 'MARCAR'}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="tallas-grid">
+                            ${Array.from(tallaMap.entries()).map(([talla, items]) => {
+                                const totalTalla = items.reduce((sum, item) => sum + item.cantidad, 0);
+                                const ubicaciones = items.map(item => 
+                                    `<span class="location-tag">📦 ${item.caja} (F${item.fila} P${item.piso}): ${item.cantidad} unid.</span>`
+                                ).join(' ');
+                                
+                                return `
+                                    <div class="talla-row">
+                                        <div class="talla-size">${talla}</div>
+                                        <div class="talla-location">${ubicaciones}</div>
+                                        <div class="talla-cantidad">${totalTalla} unid.</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            content.innerHTML = html;
+        }
+        
+        // Inicializar
+        loadState();
+        updateProgress();
+        renderContent();
+    </script>
+
+</body></html>
